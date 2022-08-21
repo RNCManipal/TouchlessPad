@@ -14,7 +14,7 @@ def nothing(x):
 cv2.namedWindow("Configurations")
 cv2.createTrackbar("Pen Size", "Configurations", 5, 100, nothing)
 cv2.createTrackbar("Eraser Size", "Configurations", 30, 200, nothing)
-imgCanvas = np.ones((576, 1000, 3), np.uint8)
+imgCanvas = np.ones((720, 1280, 3), np.uint8)
 imgCanvas[:] = 255
 xp = 0
 yp = 0
@@ -149,19 +149,18 @@ def main():
                     saved.save(name)
                     shutil.move(source, pathNew)
                     n = n + 1
-                    imgCanvas = np.ones((576, 1000, 3), np.uint8)
+                    imgCanvas = np.ones((720, 1280, 3), np.uint8)
                     imgCanvas[:] = 255
                     stop=0
 
 
-        imgGray = cv2.cvtColor(imgCanvas, cv2.COLOR_BGR2GRAY)
-        _, imgInv = cv2.threshold(imgGray, 50, 255, cv2.THRESH_BINARY_INV)
-        imgInv = cv2.cvtColor(imgInv, cv2.COLOR_GRAY2BGR)
-        imgEx1 = image[0 : 576, 0: 1000]
-        imgEx = cv2.bitwise_and(imgEx1, imgInv)
-        imgEx = cv2.bitwise_or(imgEx, imgCanvas)
-        imgEx = cv2.addWeighted(imgEx1, alpha, imgCanvas, 1 - alpha, 1.0)
-        image[0 : 576, 0: 1000] = imgEx
+        #imgGray = cv2.cvtColor(imgCanvas, cv2.COLOR_BGR2GRAY)
+        #_, imgInv = cv2.threshold(imgGray, 50, 255, cv2.THRESH_BINARY_INV)
+        #imgInv = cv2.cvtColor(imgInv, cv2.COLOR_GRAY2BGR)
+        #imgEx1 = image[0 : 576, 0: 1000]
+        #imgEx = cv2.bitwise_and(imgEx1, imgInv)
+        #imgEx = cv2.bitwise_or(imgEx, imgCanvas)
+        image = cv2.addWeighted(image, alpha, imgCanvas, 1 - alpha, 1.0)
 
 
         cv2.imshow("Video", image)
