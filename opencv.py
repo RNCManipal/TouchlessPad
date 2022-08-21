@@ -10,6 +10,10 @@ import os
 def nothing(x):
     pass
 
+# Enter the path in which your python folder is present here. An Output folder will be created in the same directory.
+path = r'C:\Users\jason\Desktop\Projects\Vedantu_Non-touch'
+
+
 # General Variable values
 cv2.namedWindow("Configurations")
 cv2.createTrackbar("Pen Size", "Configurations", 5, 100, nothing)
@@ -21,8 +25,7 @@ yp = 0
 drawColor= (255, 0, 255)
 eraserColor=(255,255,255)
 n=0
-path = r'C:\Users\jason\Desktop\Projects\Vedantu_Non-touch'
-pathNew = r'C:\Users\jason\Desktop\Projects\Vedantu_Non-touch\Output'
+pathNew = path + '\Output'
 if not os.path.exists("Output"):
     os.mkdir("Output")
 else:
@@ -79,8 +82,6 @@ def main():
     alpha =0.7
     stop=0
     n=0
-    path = r'C:\Users\jason\Desktop\Projects\Vedantu_Non-touch'
-    pathNew = r'C:\Users\jason\Desktop\Projects\Vedantu_Non-touch\Output'
 
     tracker = handTracker()
     tipIds = [4, 8, 12, 16, 20]
