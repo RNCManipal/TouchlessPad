@@ -109,7 +109,6 @@ wScr, hScr = pyautogui.size()
 while True:
     # Step1: Find the landmarks
     success, img = cap.read()
-    img = cv2.flip(img, 1)
     img = detector.findHands(img)
     lmList, bbox = detector.findPosition(img)
 
@@ -154,10 +153,11 @@ while True:
     cTime = time.time()
     fps = 1/(cTime-pTime)
     pTime = cTime
-    cv2.putText(img, str(int(fps)), (28, 58), cv2.FONT_HERSHEY_PLAIN, 3, (255, 8, 8), 3)
 
     # Step12: Display
-    cv2.imshow("Image", img)
+    img1 = cv2.flip(img, 1)
+    cv2.putText(img1, str(int(fps)), (28, 58), cv2.FONT_HERSHEY_PLAIN, 3, (255, 8, 8), 3)
+    cv2.imshow("Image", img1)
     cv2.waitKey(1)
     if (cv2.waitKey(1) & 0xFF == ord('d')):
         break
