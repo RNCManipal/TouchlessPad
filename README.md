@@ -7,3 +7,8 @@ Opencv.py includes main camera and canvas. Uses mediapipe to detect hands and di
 - 4 fingers or palm extended - resets canvas after an X amount of frames / reset mode
 
 P.S. Before running code, change the path string to the directory in which you have your python file. 
+
+
+AIVirtualMouse.py uses gestures as a way to control your mouse.
+- 1 finger - Moves mouse
+- 2 fingers - Left clicks
