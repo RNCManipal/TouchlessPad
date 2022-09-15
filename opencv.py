@@ -10,21 +10,17 @@ import os
 def nothing(x):
     pass
 
-# Enter the path in which your python folder is present here. An Output folder will be created in the same directory.
-path = r'C:\Users\jason\Desktop\Projects\Vedantu_Non-touch'
+path = os.getcwd()
 
 
 # General Variable values
 cv2.namedWindow("Configurations")
-cv2.createTrackbar("Pen Size", "Configurations", 5, 100, nothing)
+cv2.createTrackbar("Pen Size", "Configurations", 15, 100, nothing)
 cv2.createTrackbar("Eraser Size", "Configurations", 30, 200, nothing)
 imgCanvas = np.ones((720, 1280, 3), np.uint8)
 imgCanvas[:] = 255
-xp = 0
-yp = 0
 drawColor= (255, 0, 255)
 eraserColor=(255,255,255)
-n=0
 pathNew = path + '\Output'
 if not os.path.exists("Output"):
     os.mkdir("Output")
@@ -117,7 +113,7 @@ def main():
                     fingers.append(0)
 
             if fingers[1] and fingers[2]:
-                if fingers[3]:
+                if fingers[3] and fingers[4] == False:
                     cv2.circle(image, (x2, y2), 15, drawColor, cv2.FILLED)
                     print("Erasing Mode")
                     if xp == 0 and yp == 0:
