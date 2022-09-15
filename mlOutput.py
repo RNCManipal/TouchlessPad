@@ -1,8 +1,7 @@
 import os
 import cv2
 
-# Enter the path in which your python folder is present here. An Output folder will be created in the same directory.
-path = r"C:\Users\jason\Desktop\Projects\Vedantu_Non-touch"
+path = os.getcwd()
 
 
 path = path + '\Output'
