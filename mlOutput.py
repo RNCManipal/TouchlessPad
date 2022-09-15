@@ -1,8 +1,12 @@
 import os
 import cv2
 
+# Enter the path in which your python folder is present here. An Output folder will be created in the same directory.
+path = r"C:\Users\jason\Desktop\Projects\Vedantu_Non-touch"
+
+
+path = path + '\Output'
 n = 0
-path = r"C:\Users\jason\Desktop\Projects\Vedantu_Non-touch\Output"
 
 while True:
     if not os.path.exists("Output/0.jpg"):
@@ -16,9 +20,11 @@ while True:
             n = n+1
         img = cv2.imread(pathNew)
         print (pathNew)
-        cv2.imshow('img', img)
+        #To show which image is being shown.
+        #cv2.imshow('img', img)
+        
+        #Insert ML code here ('img' is the newest image in the Output folder. 'pathNew' is the images path) - 
+
 
         if (cv2.waitKey(1) & 0xFF == ord('d')):
             break
-
-
