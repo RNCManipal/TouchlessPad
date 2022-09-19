@@ -4,6 +4,7 @@ import time
 import mouse
 import mediapipe as mp
 import math
+import os
 
 #HAND TRACKING MODULE ATTACHED
 class handDetector():
@@ -102,6 +103,7 @@ cap.set(3, wCam)
 cap.set(4, hCam)
 wScr, hScr = 1280, 700
 text = ''
+canvas = 0
 close = 0
 
 detector = handDetector()
@@ -155,16 +157,22 @@ while True:
                 cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0), cv2.FILLED)
                 mouse.click(button='left')
                 stop = 0
-           #elif length>40:
-           #    ##FOR DRAGGING WHILE USING A LOCAL CANVAS APP
-           #    xi = np.interp(x1, (frameR, wCam-frameR), (0, wScr))
-           #    yi = np.interp(y1, (frameR, hCam-frameR), (0, hScr))
-           #    # Step6: Smooth Values
-           #    clocX = plocX + (xi - plocX) / smoothening
-           #    clocY = plocY + (yi - plocY) / smoothening
-           #    plocX, plocY = clocX, clocY
-           #    pyautogui.dragTo(wScr - clocX, clocY)
-           #    stop = 0
+            elif length>40:
+                prevx, prevy = wScr - clocX, clocY
+                ##FOR DRAGGING WHILE USING A LOCAL CANVAS APP
+                xi = np.interp(x1, (frameR, wCam-frameR), (0, wScr))
+                yi = np.interp(y1, (frameR, hCam-frameR), (0, hScr))
+                # Step6: Smooth Values
+                clocX = plocX + (xi - plocX) / smoothening
+                clocY = plocY + (yi - plocY) / smoothening
+                plocX, plocY = clocX, clocY
+                mouse.drag(prevx, prevy, wScr - clocX, clocY)
+                stop = 0
+        """if fingers[1] and fingers[2] and fingers[0]:
+            canvas+=1
+            if canvas>30:
+                os.system ('python opencv.py')
+                canvas = 0"""
         if fingers[1] and fingers[2] and fingers[3]:
             stop+=1
             if stop>20:
@@ -190,6 +198,6 @@ while True:
     cv2.putText(img1, str(fps), (28, 58), cv2.FONT_HERSHEY_PLAIN, 3, (255, 8, 8), 3)
     cv2.imshow("Image", img1)
     if (cv2.waitKey(1) & 0xFF == ord('d')):
-            break
+        break
 cap.release()
 cv2.destroyAllWindows()
