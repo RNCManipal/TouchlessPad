@@ -131,7 +131,7 @@ while True:
         cv2.rectangle(img, (frameR, frameR), (wCam - frameR, hCam - frameR),
                       (255, 0, 255), 2)
         # Step4: Only Index Finger: Moving Mode
-        if fingers[1] == 1 and fingers[2] == 0:
+        if fingers==[0,1,0,0,0]:
             # Step5: Convert the coordinates
             xi = np.interp(x1, (frameR, wCam-frameR), (0, wScr))
             yi = np.interp(y1, (frameR, hCam-frameR), (0, hScr))
@@ -142,13 +142,26 @@ while True:
             mouse.move(wScr - clocX, clocY)
             cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
             plocX, plocY = clocX, clocY
-        if fingers[1] == 0 and fingers [2] == 0 and fingers[4]:
+        # Step: Four fingers up: Selecting and Moving Mode
+        if fingers==[0,1,1,1,1]:
+            # Step5: Convert the coordinates
+            xi = np.interp(x1, (frameR, wCam-frameR), (0, wScr))
+            yi = np.interp(y1, (frameR, hCam-frameR), (0, hScr))
+            # Step6: Smooth Values
+            clocX = plocX + (xi - plocX) / smoothening
+            clocY = plocY + (yi - plocY) / smoothening
+            # Step7: Select and Move Mouse
+            mouse.press()
+            mouse.move(wScr - clocX, clocY)
+            cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
+            plocX, plocY = clocX, clocY
+        if fingers==[0,0,0,0,1]:
             stop+=1
             if stop>20:
                 mouse.right_click()
                 stop = 0
         # Step8: Both Index and middle are up: Clicking Mode
-        if fingers[1] == 1 and fingers[2] == 1:
+        if fingers==[0,1,1,0,0]:
             # Step9: Find distance between fingers
             length, img, lineInfo = detector.findDistance(8, 12, img)
             stop+=1
@@ -173,7 +186,7 @@ while True:
             if canvas>30:
                 os.system ('python opencv.py')
                 canvas = 0"""
-        if fingers[1] and fingers[2] and fingers[3]:
+        if fingers==[0,1,1,1,0]:
             stop+=1
             if stop>20:
                 mouse.double_click(button='left')
