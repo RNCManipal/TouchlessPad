@@ -5,6 +5,8 @@ import mouse
 import mediapipe as mp
 import math
 import os
+import keyboard
+
 
 #HAND TRACKING MODULE ATTACHED
 class handDetector():
@@ -174,12 +176,41 @@ while True:
                 mouse.right_click()
                 stop = 0
         
-        # Step8: Thumb is up: Release Mouse
+        # Step8: Thumb is up: Release Mouse and alt+tab
         if fingers==[1,0,0,0,0]:
             stop+=1
             if stop>20:
                 mouse.release()
+                keyboard.release('alt + tab')
                 stop = 0
+
+        #Thumb and index Fingers are up: Press Alt+tab to toggle between tabs and use two fingers to select a tab and thumb to release the key
+        if fingers==[1,1,0,0,0]:
+            stop+=1
+            if stop>20:
+                keyboard.press('alt + tab')
+                stop=0
+        
+        #Thumb+index+Middle Fingers are up: Ctrl+S to save
+        if fingers==[1,1,1,0,0]:
+            stop+=1
+            if stop>20:
+                keyboard.send('ctrl + S')
+                stop=0
+
+        #Last Three Fingers are up: Turn on/off Caps lock
+        if fingers==[0,0,1,1,1]:
+            stop+=1
+            if stop>20:
+                keyboard.send('caps lock')
+                stop=0
+
+        #Last Two Fingers are up: press esc
+        if fingers==[0,0,0,1,1]:
+            stop+=1
+            if stop>20:
+                keyboard.send('esc')
+                stop=0
             
         # Step8: Both Index and middle are up: Clicking Mode
         if fingers==[0,1,1,0,0]:
