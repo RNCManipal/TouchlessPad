@@ -6,6 +6,8 @@ import mediapipe as mp
 import math
 import os
 import keyboard
+import win32con
+import win32api
 
 
 #HAND TRACKING MODULE ATTACHED
@@ -181,11 +183,16 @@ while True:
             stop+=1
             if stop>20:
                 mouse.release()
-                keyboard.release('alt + tab')
+                if keyboard.is_pressed('alt + tab'):
+                    keyboard.release('alt + tab')
+                if keyboard.is_pressed('ctrl + -'):
+                    keyboard.release('ctrl + -')
+                if keyboard.is_pressed('ctrl + plus'):
+                    keyboard.release('ctrl + plus')
                 stop = 0
 
         #Thumb and index Fingers are up: Press Alt+tab to toggle between tabs and use two fingers to select a tab and thumb to release the key
-        if fingers==[1,1,0,0,0]:
+        if fingers==[1,0,1,0,0]:
             stop+=1
             if stop>20:
                 keyboard.press('alt + tab')
@@ -211,6 +218,57 @@ while True:
             if stop>20:
                 keyboard.send('esc')
                 stop=0
+
+        #Middle finger is up: Copy
+        if fingers==[0,0,1,0,0]:
+            stop+=1
+            if stop>20:
+                keyboard.send('ctrl + C')
+                stop=0
+
+        #Ring finger is up: Cut
+        if fingers==[0,0,0,1,0]:
+            stop+=1
+            if stop>20:
+                keyboard.send('ctrl + X')
+                stop=0
+
+        #Thumb+little finger up: Paste
+        if fingers==[1,0,0,0,1]:
+            stop+=1
+            if stop>20:
+                keyboard.send('ctrl + V')
+                stop=0
+
+        #middle+ring finger up: Zoom mode
+        if fingers==[0,0,1,1,0]:
+            # Step9: Find distance between fingers
+            length, img, lineInfo = detector.findDistance(12, 16, img)
+            stop+=1
+            # Step10: zoom out if distance short
+            if length < 40 and stop>20:
+                keyboard.press('ctrl + -')
+                stop = 0
+            # Step10: zoom in if distance more
+            elif length>40:
+                keyboard.press('ctrl + plus')
+                stop = 0
+
+        #Thumb+index finger up: Volume mode
+        if fingers==[1,1,0,0,0]:
+            # Step9: Find distance between fingers
+            length, img, lineInfo = detector.findDistance(12, 16, img)
+            stop+=1
+            # Step10: volume down if distance short
+            if length < 40 and stop>3:
+                win32api.keybd_event(win32con.VK_VOLUME_DOWN, 0)
+                win32api.keybd_event(win32con.VK_VOLUME_DOWN, 0, win32con.KEYEVENTF_KEYUP)
+                stop = 0
+            # Step10: volume up in if distance more
+            elif length>40 and stop>3:
+                win32api.keybd_event(win32con.VK_VOLUME_UP, 0)
+                win32api.keybd_event(win32con.VK_VOLUME_UP, 0, win32con.KEYEVENTF_KEYUP)
+                stop = 0
             
         # Step8: Both Index and middle are up: Clicking Mode
         if fingers==[0,1,1,0,0]:
