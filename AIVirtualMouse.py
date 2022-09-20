@@ -155,6 +155,17 @@ while True:
             mouse.move(wScr - clocX, clocY)
             cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
             plocX, plocY = clocX, clocY
+        if fingers==[0,1,0,0,1]:
+            # Step5: Convert the coordinates
+            xi = np.interp(x1, (frameR, wCam-frameR), (0, wScr))
+            yi = np.interp(y1, (frameR, hCam-frameR), (0, hScr))
+            # Step6: Smooth Values
+            clocX = plocX + (xi - plocX) / smoothening
+            clocY = plocY + (yi - plocY) / smoothening
+            # Step7: Move Mouse
+            mouse.drag(wScr - clocX, clocY)
+            cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
+            plocX, plocY = clocX, clocY
         if fingers==[0,0,0,0,1]:
             stop+=1
             if stop>20:
