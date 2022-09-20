@@ -142,7 +142,7 @@ while True:
             mouse.move(wScr - clocX, clocY)
             cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
             plocX, plocY = clocX, clocY
-        # Step: Only Index Finger: Moving Mode
+        # Step: Four fingers up: Selecting and Moving Mode
         if fingers==[0,1,1,1,1]:
             # Step5: Convert the coordinates
             xi = np.interp(x1, (frameR, wCam-frameR), (0, wScr))
@@ -150,8 +150,9 @@ while True:
             # Step6: Smooth Values
             clocX = plocX + (xi - plocX) / smoothening
             clocY = plocY + (yi - plocY) / smoothening
-            # Step7: Move Mouse
-            mouse.drag(wScr - clocX, clocY)
+            # Step7: Select and Move Mouse
+            mouse.press()
+            mouse.move(wScr - clocX, clocY)
             cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
             plocX, plocY = clocX, clocY
         if fingers==[0,0,0,0,1]:
@@ -190,7 +191,7 @@ while True:
             if stop>20:
                 mouse.double_click(button='left')
                 stop = 0
-        elif all(x == 0 for x in fingers):
+        if all(x == 0 for x in fingers):
             if (y1>=(hCam/2)):
                 mouse.wheel(delta=-1)
             else:
