@@ -54,7 +54,7 @@ class handDetector():
             bbox = xmin, ymin, xmax, ymax
 
             if draw:
-                cv2.rectangle(img, (xmin - 20, ymin - 20), (xmax + 20, ymax + 20), (0, 255, 0), 2)
+                cv2.rectangle(img, (xmin -20, ymin - 20), (xmax + 20, ymax + 20), (0, 255, 0), 2)
 
         return self.lmList, bbox
 
@@ -155,6 +155,8 @@ while True:
             mouse.move(wScr - clocX, clocY)
             cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
             plocX, plocY = clocX, clocY
+
+        #Index and little finger up: Close
         if fingers==[0,1,0,0,1]:
             # Step5: Convert the coordinates
             xi = np.interp(x1, (frameR, wCam-frameR), (0, wScr))
@@ -171,6 +173,14 @@ while True:
             if stop>20:
                 mouse.right_click()
                 stop = 0
+        
+        # Step8: Thumb is up: Release Mouse
+        if fingers==[1,0,0,0,0]:
+            stop+=1
+            if stop>20:
+                mouse.release()
+                stop = 0
+            
         # Step8: Both Index and middle are up: Clicking Mode
         if fingers==[0,1,1,0,0]:
             # Step9: Find distance between fingers
@@ -212,7 +222,7 @@ while True:
         #    text = "Keep fingers up to confirm"
         #    close += 1
         #    if close >= 50:
-        #        pyautogui.hotkey('alt', 'f4')
+        #        pyautogui.hotke y('alt', 'f4')
         #        close=0
     cTime = time.time()
     fps = 1/(cTime-pTime)
