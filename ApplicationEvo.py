@@ -132,19 +132,18 @@ def whiteboard_draw(event, x, y):
 def character_crop(event, x, y):
     global bound_rect_cordinates, lbd_cordinate, lbu_cordinate, crop_preview, display, best_predictions
     wb_x1, wb_x2, wb_y1, wb_y2 = whiteboard_region["x"][0], whiteboard_region["x"][1], whiteboard_region["y"][0], whiteboard_region["y"][1]
-    if wb_x1 <= x <= wb_x2 and wb_y1 <= y <= wb_y2: 
-        top_cordinate, bottom_cordinate = (wb_x1, wb_y1), (wb_x2, wb_y2)
-        crop_preview = display[top_cordinate[1]:bottom_cordinate[1], top_cordinate[0]:bottom_cordinate[0]].copy()
-        crop_preview = np.invert(crop_preview)
-        best_predictions = predict(model, crop_preview)
-        display_copy = display.copy()
-        bound_rect_cordinates = lbd_cordinate = lbu_cordinate = None
-        setup_panel(display)
-        cv2.imshow(window_name, display)
-        keyboard.press_and_release('e, d')
-    elif event is cv2.EVENT_LBUTTONUP:
-        lbd_cordinate = lbu_cordinate = None
-        cv2.imshow(window_name, display)        
+    top_cordinate, bottom_cordinate = (wb_x1, wb_y1), (wb_x2, wb_y2)
+    crop_preview = display[top_cordinate[1]:bottom_cordinate[1], top_cordinate[0]:bottom_cordinate[0]].copy()
+    crop_preview = np.invert(crop_preview)
+    best_predictions = predict(model, crop_preview)
+    display_copy = display.copy()
+    bound_rect_cordinates = lbd_cordinate = lbu_cordinate = None
+    setup_panel(display)
+    cv2.imshow(window_name, display)
+    keyboard.press_and_release('e, d')
+    #if event is cv2.EVENT_LBUTTONUP:
+    #    lbd_cordinate = lbu_cordinate = None
+    #    cv2.imshow(window_name, display)        
         
         
 def load_model(path):
@@ -217,7 +216,8 @@ model = load_model("Models/models/best_val_loss_model.h5")
 display = setup_display()
 cv2.imshow(window_name, display)
 cv2.setMouseCallback(window_name, mouse_click_event)
-pre_action = actions[1]
+pre_action = None
+current_action = actions[1]
 while True:
     k = cv2.waitKey(1)
     if k == ord('d') or k == ord('c'):
