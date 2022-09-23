@@ -164,7 +164,7 @@ while True:
         if fingers==[1,1,1,1,0]:
              stop+=1
              if stop>20:
-                keyboard.send("C")
+                keyboard.send("c")
                 stop = 0
 
 
