@@ -1,14 +1,14 @@
 import cv2
+import keyboard
 import numpy as np
+import os
 from keras.models import Sequential
 from keras.layers import Conv2D, Activation, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization
-import keyboard
 
 def clear_whiteboard(display):
     wb_x1, wb_x2, wb_y1, wb_y2 = whiteboard_region["x"][0], whiteboard_region["x"][1], whiteboard_region["y"][0], whiteboard_region["y"][1] 
     
     display[wb_y1-10:wb_y2+12, wb_x1-10:wb_x2+12] = (255, 255, 255)
-    
 def setup_display():
     title = np.zeros((80, 950, 3), dtype=np.uint8)
     board = np.zeros((600, 650, 3), dtype=np.uint8)
@@ -34,8 +34,9 @@ def setup_display():
     display = np.concatenate((title, display), axis=0)
     
     return display
-
 def setup_panel(display):
+    global prev_label
+    
     action_region_pt1, action_region_pt2 = status_regions["action"]
     preview_region_pt1, preview_region_pt2 = status_regions["preview"]
     label_region_pt1, label_region_pt2 = status_regions["labels"]
@@ -45,6 +46,11 @@ def setup_panel(display):
     display[preview_region_pt1[1]:preview_region_pt2[1], preview_region_pt1[0]:preview_region_pt2[0]] = (0, 0, 0)
     display[label_region_pt1[1]:label_region_pt2[1], label_region_pt1[0]:label_region_pt2[0]] = (0, 0, 0)
     display[acc_region_pt1[1]:acc_region_pt2[1], acc_region_pt1[0]:acc_region_pt2[0]] = (0, 0, 0)
+    
+    try:
+        prev_label
+    except:
+        prev_label = ""
     
     if crop_preview is not None:
         display[preview_region_pt1[1]:preview_region_pt2[1], preview_region_pt1[0]:preview_region_pt2[0]] = cv2.resize(crop_preview, (crop_preview_h, crop_preview_w)) 
@@ -57,6 +63,19 @@ def setup_panel(display):
             ((725, 562), (830, 562), (0, 255, 0)),
             ((725, 619), (830, 619), (255, 0, 0))
         ]
+        
+        if (labels[0] == "N" and prev_label != "N"):
+            prev_label = "N"
+            os.system(r"C:\Windows\System32\Notepad.exe")
+        elif (labels[0] == "N" and prev_label == "N"):
+            prev_label = ""
+            
+        if (labels[0] == "K"):
+            prev_label = "K"
+            os.system(r"C:\Program Files (x86)\FreeVK\FreeVK.exe")
+        elif (labels[0] == "K" and prev_label == "K"):
+            prev_label = ""
+        
         for i in range(len(labels)):
             label_cordinate, acc_cordinate, color = prediction_status_cordinate[i]
             
@@ -70,7 +89,6 @@ def setup_panel(display):
             cv2.putText(display, "_", acc_cordinate, cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
     
     cv2.putText(display, current_action, (745, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.6, action_colors[current_action], 1)
-    
 def arrange_crop_rectangle_cordinates(cor1, cor2):
     if cor1 is None or cor2 is None:
         return
@@ -87,13 +105,11 @@ def arrange_crop_rectangle_cordinates(cor1, cor2):
         else:
             result = (cor2, cor1)
     return result
-
 def mouse_click_event(event, x, y, flags, params):
     if current_action is actions[1]:
         whiteboard_draw(event, x, y)
     elif current_action is actions[2]:
         character_crop(event, x, y)
-        
 def whiteboard_draw(event, x, y):
     global left_button_down, right_button_down
     
@@ -118,34 +134,52 @@ def whiteboard_draw(event, x, y):
                 color = (255, 255, 255)
             else:
                 return
-            
-            try:
-                prevx
-            except:
-                cv2.circle(display, (x, y), 10, color, -1)
-            else:
-                cv2.line(display, (prevx, prevy), (x, y), color, 10)
 
-            prevx, prevy = x, y
+            cv2.circle(display, (x, y), 10, color, -1)
             cv2.imshow(window_name, display)
-            
 def character_crop(event, x, y):
     global bound_rect_cordinates, lbd_cordinate, lbu_cordinate, crop_preview, display, best_predictions
-    wb_x1, wb_x2, wb_y1, wb_y2 = whiteboard_region["x"][0], whiteboard_region["x"][1], whiteboard_region["y"][0], whiteboard_region["y"][1]
-    top_cordinate, bottom_cordinate = (wb_x1, wb_y1), (wb_x2, wb_y2)
-    crop_preview = display[top_cordinate[1]:bottom_cordinate[1], top_cordinate[0]:bottom_cordinate[0]].copy()
-    crop_preview = np.invert(crop_preview)
-    best_predictions = predict(model, crop_preview)
-    display_copy = display.copy()
-    bound_rect_cordinates = lbd_cordinate = lbu_cordinate = None
-    setup_panel(display)
-    cv2.imshow(window_name, display)
-    keyboard.press_and_release('e, d')
-    #if event is cv2.EVENT_LBUTTONUP:
-    #    lbd_cordinate = lbu_cordinate = None
-    #    cv2.imshow(window_name, display)        
-        
-        
+    wb_x1, wb_x2, wb_y1, wb_y2 = whiteboard_region["x"][0], whiteboard_region["x"][1], whiteboard_region["y"][0], whiteboard_region["y"][1] 
+    
+    if wb_x1 <= x <= wb_x2 and wb_y1 <= y <= wb_y2:
+        if event is cv2.EVENT_LBUTTONDOWN:
+            lbd_cordinate = (x, y)
+        elif event is cv2.EVENT_RBUTTONUP:
+            lbu_cordinate = (x, y)
+
+        if lbd_cordinate is not None and lbu_cordinate is not None:
+            bound_rect_cordinates = arrange_crop_rectangle_cordinates(lbd_cordinate, lbu_cordinate)
+        elif lbd_cordinate is not None:
+            if event is cv2.EVENT_MOUSEMOVE:
+                mouse_move_cordinate = (x, y)
+                mouse_move_rect_cordinates = arrange_crop_rectangle_cordinates(lbd_cordinate, mouse_move_cordinate)
+                top_cordinate, bottom_cordinate = mouse_move_rect_cordinates[0], mouse_move_rect_cordinates[1]
+                
+                display_copy = display.copy()
+                cropped_region = display_copy[top_cordinate[1]:bottom_cordinate[1], top_cordinate[0]:bottom_cordinate[0]]
+                filled_rect = np.zeros((cropped_region.shape[:]))
+                filled_rect[:, :, :] = (0, 255, 0)
+                filled_rect = filled_rect.astype(np.uint8)
+                cropped_rect = cv2.addWeighted(cropped_region, 0.3, filled_rect, 0.5, 1.0)
+                
+                if cropped_rect is not None:
+                    display_copy[top_cordinate[1]:bottom_cordinate[1], top_cordinate[0]:bottom_cordinate[0]] = cropped_rect
+                    cv2.imwrite("captured/filled.jpg", display_copy)
+                    cv2.imshow(window_name, display_copy)
+
+        if bound_rect_cordinates is not None:
+            top_cordinate, bottom_cordinate = bound_rect_cordinates[0], bound_rect_cordinates[1]
+            crop_preview = display[top_cordinate[1]:bottom_cordinate[1], top_cordinate[0]:bottom_cordinate[0]].copy()
+            crop_preview = np.invert(crop_preview)
+            best_predictions = predict(model, crop_preview)
+            display_copy = display.copy()
+            bound_rect_cordinates = lbd_cordinate = lbu_cordinate = None
+            setup_panel(display)
+            cv2.imshow(window_name, display)
+            keyboard.press_and_release('e, d')
+    elif event is cv2.EVENT_LBUTTONUP:
+        lbd_cordinate = lbu_cordinate = None
+        cv2.imshow(window_name, display)        
 def load_model(path):
     model = Sequential()
 
@@ -167,8 +201,6 @@ def load_model(path):
     model.load_weights(path)
     
     return model
-
-
 def predict(model, image):
     labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     
@@ -191,6 +223,7 @@ def predict(model, image):
             
     return best_predictions
 
+prev_label = ""
 left_button_down = False
 right_button_down = False
 bound_rect_cordinates = lbd_cordinate = lbu_cordinate = None
