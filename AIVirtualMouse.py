@@ -10,6 +10,9 @@ import win32con
 import win32api
 
 
+wScr, hScr = 1280, 700 #Enter your screen resolution here. Get screen resolution from here - https://bestfirms.com/what-is-my-screen-resolution/
+
+
 #HAND TRACKING MODULE ATTACHED
 class handDetector():
     def __init__(self, mode=False, maxHands=2, complexity=1, detectionCon=0.7, trackCon=0.5):
@@ -105,7 +108,6 @@ cap = cv2.VideoCapture(0)
 stop = 0
 cap.set(3, wCam)
 cap.set(4, hCam)
-wScr, hScr = 1280, 700
 text = ''
 canvas = 0
 close = 0
