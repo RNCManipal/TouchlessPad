@@ -10,6 +10,9 @@ import win32con
 import win32api
 
 
+wScr, hScr = 1280, 700 #Enter your screen resolution here. Get screen resolution from here - https://bestfirms.com/what-is-my-screen-resolution/
+
+
 #HAND TRACKING MODULE ATTACHED
 class handDetector():
     def __init__(self, mode=False, maxHands=2, complexity=1, detectionCon=0.7, trackCon=0.5):
@@ -105,12 +108,12 @@ cap = cv2.VideoCapture(0)
 stop = 0
 cap.set(3, wCam)
 cap.set(4, hCam)
-wScr, hScr = 1536 , 864
 text = ''
 canvas = 0
 close = 0
 
 detector = handDetector()
+#
 
 # print(wScr, hScr)
 
@@ -158,7 +161,15 @@ while True:
             mouse.move(wScr - clocX, clocY)
             cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
             plocX, plocY = clocX, clocY
-            
+
+        #Index and little finger up: Press C
+        if fingers==[1,1,1,1,0]:
+             stop+=1
+             if stop>20:
+                keyboard.send("c")
+                stop = 0
+
+
         if fingers==[0,0,0,0,1]:
             stop+=1
             if stop>20:
@@ -237,14 +248,14 @@ while True:
                 keyboard.press('ctrl + -')
                 stop = 0
             # Step10: zoom in if distance more
-            elif length>40:
+            elif length>=40:
                 keyboard.press('ctrl + plus')
                 stop = 0
 
         #Thumb+index finger up: Volume mode
         if fingers==[1,1,0,0,0]:
             # Step9: Find distance between fingers
-            length, img, lineInfo = detector.findDistance(12, 16, img)
+            length, img, lineInfo = detector.findDistance(4, 8, img)
             stop+=1
             # Step10: volume down if distance short
             if length < 40 and stop>3:
@@ -252,7 +263,7 @@ while True:
                 win32api.keybd_event(win32con.VK_VOLUME_DOWN, 0, win32con.KEYEVENTF_KEYUP)
                 stop = 0
             # Step10: volume up in if distance more
-            elif length>40 and stop>3:
+            elif length>=40 and stop>3:
                 win32api.keybd_event(win32con.VK_VOLUME_UP, 0)
                 win32api.keybd_event(win32con.VK_VOLUME_UP, 0, win32con.KEYEVENTF_KEYUP)
                 stop = 0
@@ -267,7 +278,7 @@ while True:
                 cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0), cv2.FILLED)
                 mouse.click(button='left')
                 stop = 0
-            elif length>40:
+            elif length>=40:
                 prevx, prevy = wScr - clocX, clocY
                 ##FOR DRAGGING WHILE USING A LOCAL CANVAS APP
                 xi = np.interp(x1, (frameR, wCam-frameR), (0, wScr))
@@ -278,6 +289,11 @@ while True:
                 plocX, plocY = clocX, clocY
                 mouse.drag(prevx, prevy, wScr - clocX, clocY)
                 stop = 0
+        """if fingers[1] and fingers[2] and fingers[0]:
+            canvas+=1
+            if canvas>30:
+                os.system ('python opencv.py')
+                canvas = 0"""
         if fingers==[0,1,1,1,0]:
             stop+=1
             if stop>20:
@@ -288,6 +304,13 @@ while True:
                 mouse.wheel(delta=-1)
             else:
                 mouse.wheel(delta=1)
+        # ALT + F4 to clopse app    
+        #if all(x == 1 for x in fingers):
+        #    text = "Keep fingers up to confirm"
+        #    close += 1
+        #    if close >= 50:
+        #        pyautogui.hotke y('alt', 'f4')
+        #        close=0
     cTime = time.time()
     fps = 1/(cTime-pTime)
     pTime = cTime
