@@ -33,3 +33,12 @@ AIVirtualMouse.py uses gestures as a way to control your mouse.
 - thumb+index finger far - volume up
 
 
+LetterML.py is the configured letter recognizing program that is able to detect images you draw in it, convert it to a character and execute the function
+To draw, keep infex and middle finger apart. To guess the character, keep all fingers up except the pinky.
+
+Functions performed - 
+- N : Open Notepad
+
+
+
+
