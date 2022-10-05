@@ -10,12 +10,14 @@ import execute_app as ex
 
 
 def clear_whiteboard(display):
+    """_summary_: Clears the whiteboard by drawing a white rectangle over it. """
     wb_x1, wb_x2, wb_y1, wb_y2 = whiteboard_region["x"][0], whiteboard_region["x"][1], whiteboard_region["y"][0], whiteboard_region["y"][1] 
     
     display[wb_y1-10:wb_y2+12, wb_x1-10:wb_x2+12] = (255, 255, 255)
     
     
 def setup_display():
+    """_summary_: Sets up the display window and the mouse callback. """
     title = np.zeros((80, 950, 3), dtype=np.uint8)
     board = np.zeros((600, 650, 3), dtype=np.uint8)
     panel = np.zeros((600, 300, 3), dtype=np.uint8)
@@ -34,7 +36,7 @@ def setup_display():
     cv2.putText(panel, "Best Predictions", (52, 320), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
     cv2.putText(panel, "Prediction", (42, 362), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
     cv2.putText(panel, "Accuracy", (168, 362), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-    cv2.putText(panel, actions[0], (95, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, action_colors[actions[0]], 1)
+    cv2.putText(panel, actions[1], (95, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, action_colors[actions[1]], 1)
 
     display = np.concatenate((board, panel), axis=1)
     display = np.concatenate((title, display), axis=0)
@@ -43,6 +45,7 @@ def setup_display():
 
 
 def setup_panel(display):
+    """_summary_: Sets up the panel. """
     global execute_once
     action_region_pt1, action_region_pt2 = status_regions["action"]
     preview_region_pt1, preview_region_pt2 = status_regions["preview"]
@@ -54,7 +57,6 @@ def setup_panel(display):
     display[label_region_pt1[1]:label_region_pt2[1], label_region_pt1[0]:label_region_pt2[0]] = (0, 0, 0)
     display[acc_region_pt1[1]:acc_region_pt2[1], acc_region_pt1[0]:acc_region_pt2[0]] = (0, 0, 0)
 
-    
     if crop_preview is not None:
         display[preview_region_pt1[1]:preview_region_pt2[1], preview_region_pt1[0]:preview_region_pt2[0]] = cv2.resize(crop_preview, (crop_preview_h, crop_preview_w)) 
     
@@ -83,10 +85,11 @@ def setup_panel(display):
             cv2.putText(display, "_", label_cordinate, cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
             cv2.putText(display, "_", acc_cordinate, cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
     
-    cv2.putText(display, current_action, (745, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.6, action_colors[current_action], 1)
+    cv2.putText(display, "DRAW", (745, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.6, action_colors["DRAW"], 1)
 
 
 def mouse_click_event(event, x, y, flags, params):
+    """_summary_: Mouse click event handler. """
     if current_action is actions[1]:
         whiteboard_draw(event, x, y)
     elif current_action is actions[2]:
@@ -94,6 +97,7 @@ def mouse_click_event(event, x, y, flags, params):
         
         
 def whiteboard_draw(event, x, y):
+    """_summary_: Draws on the whiteboard. """
     global left_button_down, right_button_down, maximums
     
     wb_x1, wb_x2, wb_y1, wb_y2 = whiteboard_region["x"][0], whiteboard_region["x"][1], whiteboard_region["y"][0], whiteboard_region["y"][1] 
@@ -124,6 +128,7 @@ def whiteboard_draw(event, x, y):
             
             
 def character_crop(event, x, y):
+    """_summary_: Crops the display automatically to include charactesr. """
     global bound_rect_cordinates, lbd_cordinate, lbu_cordinate, crop_preview, display, best_predictions, maximums
     
     high = maximums[0][1]
@@ -157,6 +162,7 @@ def character_crop(event, x, y):
         
               
 def load_model(path):
+    """_summary_: Loads the Machine Learning Neural Network. """
     model = Sequential()
 
     model.add(Conv2D(32, (5, 5), input_shape=(28, 28, 1), activation="relu"))
@@ -180,6 +186,7 @@ def load_model(path):
 
 
 def predict(model, image):
+    """_summary_: Predicts the character from the image. """
     labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -201,6 +208,10 @@ def predict(model, image):
             
     return best_predictions
 
+
+"""_summary_: Main function. """
+
+"""_summary_: General putpose variable declaration. """
 execute_once=0
 maximums = []
 left_button_down = False
@@ -230,6 +241,9 @@ cv2.imshow(window_name, display)
 cv2.setMouseCallback(window_name, mouse_click_event)
 pre_action = None
 current_action = actions[1]
+
+
+"""_summary_: Main loop. """
 while True:
     k = cv2.waitKey(1)
     if k == ord('d') or k == ord('c'):
