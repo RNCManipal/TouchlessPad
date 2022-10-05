@@ -10,7 +10,7 @@ def execute(labels):
             funct = settings[val]
 
     if (funct == "Open Notepad"):
-        os.system(r"C:\Windows\System32\Notepad.exe")
+        os.startfile(r"C:\Windows\System32\Notepad.exe")
 
 #    if (funct == "Keyboard"):
 #        os.system(r"C:\Program Files (x86)\FreeVK\FreeVK.exe")
