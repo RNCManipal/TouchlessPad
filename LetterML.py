@@ -68,10 +68,13 @@ def setup_panel(display):
             ((725, 562), (830, 562), (0, 255, 0)),
             ((725, 619), (830, 619), (255, 0, 0))
         ]
+        print("sp started with bp")
         
         if (execute_once == 0):
             ex.execute(labels[0])
             execute_once+=1
+            
+        print("Executed")
         
         for i in range(len(labels)):
             label_cordinate, acc_cordinate, color = prediction_status_cordinate[i]
@@ -84,25 +87,31 @@ def setup_panel(display):
             
             cv2.putText(display, "_", label_cordinate, cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
             cv2.putText(display, "_", acc_cordinate, cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
+            
+        print("Label output")
     
     cv2.putText(display, "DRAW", (745, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.6, action_colors["DRAW"], 1)
+    print("Sp done")
 
 
 def mouse_click_event(event, x, y, flags, params):
     """_summary_: Mouse click event handler. """
+    global crop
     if current_action is actions[1]:
         whiteboard_draw(event, x, y)
-    elif current_action is actions[2]:
+    elif current_action is actions[2] and crop == 0:
+        crop = 1
         character_crop(event, x, y)
         
         
 def whiteboard_draw(event, x, y):
     """_summary_: Draws on the whiteboard. """
-    global left_button_down, right_button_down, maximums
+    global left_button_down, right_button_down, maximums, prevx, prevy,crop
     
     wb_x1, wb_x2, wb_y1, wb_y2 = whiteboard_region["x"][0], whiteboard_region["x"][1], whiteboard_region["y"][0], whiteboard_region["y"][1] 
     
     if event is cv2.EVENT_LBUTTONUP:
+        prevx, prevy = None, None
         left_button_down = False
     elif event is cv2.EVENT_RBUTTONUP:
         right_button_down = False
@@ -110,6 +119,7 @@ def whiteboard_draw(event, x, y):
         color = (0, 0, 0)
         if event in [cv2.EVENT_LBUTTONDOWN, cv2.EVENT_LBUTTONUP, cv2.EVENT_RBUTTONDOWN, cv2.EVENT_RBUTTONUP, cv2.EVENT_MOUSEMOVE]:
             if event is cv2.EVENT_LBUTTONDOWN:
+                crop = 0
                 color = (0, 0, 0)
                 left_button_down = True
             elif left_button_down and event is cv2.EVENT_MOUSEMOVE:
@@ -123,14 +133,21 @@ def whiteboard_draw(event, x, y):
                 return
             
             maximums.append((x, y))
-            cv2.circle(display, (x, y), 10, color, -1)
+            
+            if prevx == None:
+                cv2.circle(display, (x, y), 5, color, -1)
+            else:
+                cv2.line(display, (prevx, prevy), (x, y), color, 10)
+
+            prevx, prevy = x, y
             cv2.imshow(window_name, display)
             
             
 def character_crop(event, x, y):
-    """_summary_: Crops the display automatically to include charactesr. """
+    """_summary_: Crops the display automatically to include characters. """
     global bound_rect_cordinates, lbd_cordinate, lbu_cordinate, crop_preview, display, best_predictions, maximums
     
+    print("cc started")
     high = maximums[0][1]
     low = maximums[0][1]
     right = maximums[0][0]
@@ -151,14 +168,17 @@ def character_crop(event, x, y):
     right = right + 30
     maximums = []
     
+    print("maximum disabled")
     crop_preview = display[high:low, left:right].copy()
     crop_preview = np.invert(crop_preview)
     best_predictions = predict(model, crop_preview)
     display_copy = display.copy()
     high = low = right = left = 0
     setup_panel(display)
+    print("setup updated")
     cv2.imshow(window_name, display)
-    keyboard.press_and_release('e, d') 
+    keyboard.press_and_release('e, d')
+    print("reseted")
         
               
 def load_model(path):
@@ -212,8 +232,10 @@ def predict(model, image):
 """_summary_: Main function. """
 
 """_summary_: General putpose variable declaration. """
+crop = 0
 execute_once=0
 maximums = []
+prevx, prevy = None, None
 left_button_down = False
 right_button_down = False
 bound_rect_cordinates = lbd_cordinate = lbu_cordinate = None
@@ -257,6 +279,7 @@ while True:
         #    cv2.imshow(window_name, display)
         #    pre_action = current_action
     elif k == ord('e'):
+        prevx, prevy = None, None
         clear_whiteboard(display)
         cv2.imshow(window_name, display)
     elif k == 27:
