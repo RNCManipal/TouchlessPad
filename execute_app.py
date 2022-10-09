@@ -38,8 +38,8 @@ def execute(labels):
     if (funct == "Instagram"):
        webbrowser.open_new_tab("https://www.instagram.com")
     
-    #if (funct == "Jupiter Notebook"):
-    #    os.startfile(r"C:\\Program Files (x86)\\Amazon\\Amazon.exe")
+    if (funct == "JP"):
+        webbrowser.open_new_tab("https://www.jpmorganchase.com/")
     
     #if (funct == "Keyboard"):
     #    os.startfile(r"C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe")
@@ -68,17 +68,17 @@ def execute(labels):
     if (funct == "Twitter"):
         webbrowser.open_new_tab("https://twitter.com")
 
-    #if (funct == "Uber"):
-    #    os.system(r"C:\Program Files (x86)\FreeVK\FreeVK.exe")
-    
+    if (funct == "Unicef"):
+        webbrowser.open_new_tab("https://www.unicef.org/")
+        
     if funct == "Valve":
         webbrowser.open_new_tab("https://store.steampowered.com/")
     
     if (funct == "Whatsapp"):
         webbrowser.open_new_tab("https://web.whatsapp.com/")
 
-    #if (funct == "Xfinity"):
-    #    webbrowser.open_new_tab("https://www.xfinity.com/")
+    if (funct == "Exit"):
+        keyboard.send("esc")
 
     if (funct == "YouTube"):
         webbrowser.open_new_tab("https://www.youtube.com")
