@@ -68,13 +68,10 @@ def setup_panel(display):
             ((725, 562), (830, 562), (0, 255, 0)),
             ((725, 619), (830, 619), (255, 0, 0))
         ]
-        print("sp started with bp")
         
         if (execute_once == 0):
             ex.execute(labels[0])
             execute_once+=1
-            
-        print("Executed")
         
         for i in range(len(labels)):
             label_cordinate, acc_cordinate, color = prediction_status_cordinate[i]
@@ -87,11 +84,8 @@ def setup_panel(display):
             
             cv2.putText(display, "_", label_cordinate, cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
             cv2.putText(display, "_", acc_cordinate, cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
-            
-        print("Label output")
     
     cv2.putText(display, "DRAW", (745, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.6, action_colors["DRAW"], 1)
-    print("Sp done")
 
 
 def mouse_click_event(event, x, y, flags, params):
@@ -147,7 +141,6 @@ def character_crop(event, x, y):
     """_summary_: Crops the display automatically to include characters. """
     global bound_rect_cordinates, lbd_cordinate, lbu_cordinate, crop_preview, display, best_predictions, maximums
     
-    print("cc started")
     high = maximums[0][1]
     low = maximums[0][1]
     right = maximums[0][0]
@@ -168,17 +161,14 @@ def character_crop(event, x, y):
     right = right + 30
     maximums = []
     
-    print("maximum disabled")
     crop_preview = display[high:low, left:right].copy()
     crop_preview = np.invert(crop_preview)
     best_predictions = predict(model, crop_preview)
     display_copy = display.copy()
     high = low = right = left = 0
     setup_panel(display)
-    print("setup updated")
     cv2.imshow(window_name, display)
     keyboard.press_and_release('e, d')
-    print("reseted")
         
               
 def load_model(path):
