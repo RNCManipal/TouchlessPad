@@ -41,8 +41,8 @@ def execute(labels):
     if (funct == "JP"):
         webbrowser.open_new_tab("https://www.jpmorganchase.com/")
     
-    #if (funct == "Keyboard"):
-    #    os.startfile(r"C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe")
+    if (funct == "Keyboard"):
+        os.startfile(r"C:/windows/System32/osk.exe")
 
     if (funct == "MIT"):
         webbrowser.open_new_tab("https://manipal.edu/mit.html")
