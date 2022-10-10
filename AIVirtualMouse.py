@@ -181,8 +181,7 @@ while True:
             stop+=1
             if stop>20:
                 mouse.release()
-                if keyboard.is_pressed('alt + tab'):
-                    keyboard.release('alt + tab')
+                keyboard.send('alt')
                 if keyboard.is_pressed('ctrl + -'):
                     keyboard.release('ctrl + -')
                 if keyboard.is_pressed('ctrl + plus'):
