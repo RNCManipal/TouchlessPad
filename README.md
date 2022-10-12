@@ -10,9 +10,9 @@ P.S. Before running code, change the path string to the directory in which you h
 
 
 AIVirtualMouse.py uses gestures as a way to control your mouse.
-- 1 finger - moves mouse
-- 2 fingers together - clicks one
-- 2 fingers apart - drags mouse from 'a' to 'b' while single click
+- 1 finger -  drags mouse from 'a' to 'b' while single click
+- 2 fingers together - moves mouse
+- 2 fingers apart -clicks one
 - 3 fingers - double click
 - Pinky finger - right clicks
 - Thumb+Index+middle+ring finger - C
@@ -20,7 +20,7 @@ AIVirtualMouse.py uses gestures as a way to control your mouse.
 - Thumb+Index+middle+pinky finger - close
 - 4 fingers - Select and move mouse
 - Thumb - Release mouse and any other key 
-- Thumb+middle finger - Toggle between tabs
+- middle + ring finger - Toggle between tabs
 - Last Three Fingers - Turn on/off Caps lock
 - Last Two Fingers - press esc
 - middle finger - copy
