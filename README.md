@@ -15,8 +15,10 @@ AIVirtualMouse.py uses gestures as a way to control your mouse.
 - 2 fingers apart - drags mouse from 'a' to 'b' while single click
 - 3 fingers - double click
 - Pinky finger - right clicks
+- Thumb+Index+middle+ring finger - C
+- middle + pinky finger - E
 
-- Thumb+Index+middle+ring finger - close
+- Thumb+Index+middle+pinky finger - close
 
 - 4 fingers - Select and move mouse
 - Thumb - Release mouse and any other key 
