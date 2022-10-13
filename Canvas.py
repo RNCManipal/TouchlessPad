@@ -16,7 +16,7 @@ path = os.getcwd()
 # General Variable values
 cv2.namedWindow("Configurations")
 cv2.createTrackbar("Pen Size", "Configurations", 15, 100, nothing)
-cv2.createTrackbar("Eraser Size", "Configurations", 30, 200, nothing)
+cv2.createTrackbar("Eraser Size", "Configurations", 50, 200, nothing)
 imgCanvas = np.ones((720, 1280, 3), np.uint8)
 imgCanvas[:] = 255
 drawColor= (255, 0, 255)
