@@ -42,7 +42,7 @@ def execute(labels):
         webbrowser.open_new_tab("https://www.jpmorganchase.com/")
     
     if (funct == "Keyboard"):
-        os.startfile(r"C:/windows/System32/osk.exe")
+        os.startfile(r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Free Virtual Keyboard.lnk")
 
     if (funct == "MIT"):
         webbrowser.open_new_tab("https://manipal.edu/mit.html")
