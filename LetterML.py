@@ -7,6 +7,7 @@ from keras.layers import Conv2D, Activation, MaxPooling2D, Flatten, Dense, Dropo
 
 import execute_app as ex
 
+
 def clear_whiteboard(display):
     """_summary_: Clears the whiteboard by drawing a white rectangle over it. """
     wb_x1, wb_x2, wb_y1, wb_y2 = whiteboard_region["x"][0], whiteboard_region["x"][1], whiteboard_region["y"][0], whiteboard_region["y"][1] 
@@ -127,10 +128,10 @@ def whiteboard_draw(event, x, y):
             maximums.append((x, y))
             
             if prevx == None:
+
                 cv2.circle(display, (x, y), 10, color, -1)
             else:
                 cv2.line(display, (prevx, prevy), (x, y), color, 20)
-
             prevx, prevy = x, y
             cv2.imshow(window_name, display)
             
