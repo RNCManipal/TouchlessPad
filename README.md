@@ -1,4 +1,4 @@
-## Non-Touch_Writing_Pad
+## Touchless Pad
 
 Opencv.py includes main camera and canvas. Uses mediapipe to detect hands and displays on main cam image. The gestures to control drawing are:
 - 1 finger - draws on canvas / drawing mode
