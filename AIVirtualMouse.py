@@ -8,9 +8,7 @@ import keyboard
 import win32con
 import win32api
 
-
 wScr, hScr = 1536, 900 #Enter your screen resolution here. Get screen resolution from here - https://bestfirms.com/what-is-my-screen-resolution/
-
 
 #HAND TRACKING MODULE ATTACHED
 class handDetector():
@@ -254,11 +252,11 @@ while True:
             stop+=1
             # Step10: zoom out if distance short
             if length < 40 and stop>20:
-                keyboard.press('ctrl + -')
+                keyboard.send('ctrl + -')
                 stop = 0
             # Step10: zoom in if distance more
             elif length>=40:
-                keyboard.press('ctrl + plus')
+                keyboard.send('ctrl + plus')
                 stop = 0
 
         #Thumb+index finger up: Volume mode
