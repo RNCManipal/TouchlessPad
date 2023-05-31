@@ -85,4 +85,3 @@ def execute(labels):
     
     if (funct == "Zoom"):
         webbrowser.open_new_tab("https://zoom.us")
-
