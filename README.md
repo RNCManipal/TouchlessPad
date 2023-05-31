@@ -1,12 +1,9 @@
 ## Touchless Pad
 
-Opencv.py includes main camera and canvas. Uses mediapipe to detect hands and displays on main cam image. The gestures to control drawing are:
-- 1 finger - draws on canvas / drawing mode
-- 2 fingers - no input / selection mode
-- 3 fingers - eraser / eraser mode
-- 4 fingers or palm extended - resets canvas after an X amount of frames / reset mode
+![alt text](./public/example.jpg?raw=true)
 
-P.S. Before running code, change the path string to the directory in which you have your python file. 
+P.S. Preferably use python 3.9.\
+Before running code, change the path string to the directory in which you have your python file. 
 
 
 AIVirtualMouse.py uses gestures as a way to control your mouse.
@@ -33,11 +30,11 @@ AIVirtualMouse.py uses gestures as a way to control your mouse.
 
 
 LetterML.py is the configured letter recognizing program that is able to detect images you draw in it, convert it to a character and execute the function
-To draw, keep infex and middle finger apart. To guess the character, keep all fingers up except the pinky.
+To draw, index finger up. To guess the character, keep all fingers up except the pinky.
 
 Functions performed - 
-- N : Notepad (Needs to be added)
-- K : Keyboard
+- N : Notepad
+- K : Keyboard (Needs to have the required app installed on the pc)
 - A : Amazon
 - B : Bing
 - C : Calculator
